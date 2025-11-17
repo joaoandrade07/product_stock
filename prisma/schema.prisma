@@ -1,21 +1,55 @@
 datasource db {
-    provider = "mysql"
-    url = env("DATABASE_URL")
+    provider    =       "mysql"
+    url         =       env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
-    output = "../src/generated/prisma"
+    provider    =       "prisma-client-js"
+    output      =       "../src/generated/prisma"
 }
 
 model User {
-    id String @id @default(uuid())
-    name String
-    email String @unique
-    role Role @default(USER)
+    id          String      @id @default(uuid())
+    name        String
+    email       String      @unique
+    password    String
+    role        Role        @default(USER)
+
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
 }
 
 enum Role{
     USER
     ADMIN
+}
+
+model Client{
+    id          String      @id @default(uuid())
+    type        ClientType
+    name        String
+    email       String
+    phone       String
+    document    String      @unique
+    ie          String?
+    contactName String?
+
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+}
+
+enum ClientType{
+    PJ
+    PF
+}
+
+model Address {
+    id          String      @id @default(uuid())
+    clientId    String
+    client      Client      @relation(fields: [clientId], references: [id])
+    street      String
+    number      String?
+    city        String
+    state       String
+    zip         String
 }
