@@ -33,6 +33,7 @@ model Client{
     document    String      @unique
     ie          String?
     contactName String?
+    address     Address[]
 
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
