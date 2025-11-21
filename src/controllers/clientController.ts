@@ -1,6 +1,6 @@
-import { Request, Response, request } from "express";
+import { Request, Response } from "express";
 import { IClient } from "../interfaces/Clients";
-import { createClientService, getAllClientsService, getClientByIdService } from "../services/clientServices";
+import { createClientService, getAllClientsService, getClientByIdService } from "../services/clientService";
 
 export const getAllClientsController = async(req:Request, res:Response) => {
     const data = await getAllClientsService();
