@@ -6,9 +6,10 @@ import { created, notFound, ok } from "../utils/http-helper"
 export const getAllClientsService = async () => {
     const users = await prisma.client.findMany({
         omit: {
-            createdAt:true,
+            createdAt: true,
             updatedAt: true,
-        }
+        },
+        include: { address: true }
     });
     return ok(users);
 }
@@ -16,22 +17,23 @@ export const getAllClientsService = async () => {
 export const getClientByIdService = async (id: string) => {
     const user = await prisma.client.findUnique({
         where: {
-            id:id
+            id: id
         },
         omit: {
-            id:true,
-            createdAt:true,
+            id: true,
+            createdAt: true,
             updatedAt: true,
-        }
+        },
+        include: { address: true }
     });
-    if(!user) return notFound();
+    if (!user) return notFound();
     return ok(user);
 }
 
-export const createClientService = async (client:IClient) => {
+export const createClientService = async (client: IClient) => {
     const data = await prisma.client.create({
-        data:{
-            document:client.document,
+        data: {
+            document: client.document,
             email: client.email,
             name: client.name,
             phone: client.phone,
