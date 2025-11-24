@@ -37,6 +37,8 @@ model Client{
 
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
+
+    budgets      Budget[]
 }
 
 enum ClientType{
@@ -53,4 +55,55 @@ model Address {
     city        String
     state       String
     zip         String
+}
+
+model Product {
+    id          String      @id @default(uuid())
+    name        String
+    description String?
+    price       Decimal      @db.Decimal(10, 2)
+    stock       Int          @default(0)
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+
+    budgetItems BudgetItem[]
+}
+
+model Budget {
+    id          String        @id @default(uuid())
+
+    clientId    String
+    client      Client        @relation(fields: [clientId], references: [id])
+
+    status      BudgetStatus  @default(PENDING)
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+
+    total       Decimal        @db.Decimal(10, 2) @default(0.00)
+
+    items       BudgetItem[]
+}
+
+enum BudgetStatus {
+    PENDING
+    SENT
+    APPROVED
+    REJECTED
+    CANCELED
+}
+
+model BudgetItem {
+    id         String     @id @default(uuid())
+
+    budgetId   String
+    budget     Budget     @relation(fields: [budgetId], references: [id])
+
+    productId  String
+    product    Product    @relation(fields: [productId], references: [id])
+
+    quantity   Int
+    unitPrice  Decimal     @db.Decimal(10, 2)
+    subtotal   Decimal     @db.Decimal(10, 2)
+
+    createdAt  DateTime    @default(now())
 }

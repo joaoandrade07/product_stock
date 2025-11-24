@@ -1,0 +1,56 @@
+import { IProduct } from "../interfaces/Product";
+import prisma from "../prisma"
+import { badRequest, created, noContent, notFound, ok } from "../utils/http-helper";
+
+export const getAllProductsService = async () => {
+    const budgets = await prisma.budget.findMany({
+        omit:{
+            createdAt:true,
+            updatedAt:true
+        }
+    });
+    return ok(budgets);
+}
+
+export const getProductById =async (id:string) => {
+    const product = await prisma.budget.findUnique({
+        where: {
+            id:id
+        },
+        omit:{
+            createdAt:true,
+            updatedAt:true
+        }
+    });
+    if(!product) return notFound();
+    return ok(product);
+}
+
+export const createProduct =async (product:IProduct) => {
+    try {
+        const data = await prisma.product.create({
+            data: {
+                name:product.name,
+                price: product.price,
+                description:product.description,
+                stock:product.stock
+            },
+            omit:{
+                createdAt:true,
+                updatedAt:true
+            }
+        });
+        return created(data);
+    } catch (error) {
+        return badRequest("Error when creating product!")
+    }
+}
+
+export const deleteProduct =async (id:string) => {
+    const data = await prisma.product.delete({
+        where:{
+            id:id
+        }
+    });
+    return noContent();
+}
