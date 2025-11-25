@@ -3,7 +3,7 @@ import prisma from "../prisma"
 import { badRequest, created, noContent, notFound, ok } from "../utils/http-helper";
 
 export const getAllProductsService = async () => {
-    const budgets = await prisma.budget.findMany({
+    const budgets = await prisma.product.findMany({
         omit:{
             createdAt:true,
             updatedAt:true
@@ -12,8 +12,8 @@ export const getAllProductsService = async () => {
     return ok(budgets);
 }
 
-export const getProductById =async (id:string) => {
-    const product = await prisma.budget.findUnique({
+export const getProductById = async (id:string) => {
+    const product = await prisma.product.findUnique({
         where: {
             id:id
         },
