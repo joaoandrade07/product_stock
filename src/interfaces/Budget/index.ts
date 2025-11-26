@@ -3,6 +3,6 @@ import { IbudgetItem } from "../BudgetItem/intex";
 
 export interface IBudget {
     clientId: string;
-    status: BudgetStatus;
+    status?: BudgetStatus;
     items: IbudgetItem[];
 }
