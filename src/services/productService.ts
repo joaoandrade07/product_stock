@@ -1,15 +1,23 @@
 import { IProduct } from "../interfaces/Product";
 import prisma from "../prisma"
 import { badRequest, created, noContent, notFound, ok } from "../utils/http-helper";
+import { pagination } from "../utils/pagination";
 
-export const getAllProductsService = async () => {
-    const budgets = await prisma.product.findMany({
-        omit: {
-            createdAt: true,
-            updatedAt: true
-        }
-    });
-    return ok(budgets);
+export const getAllProductsService = async (page:number=0, limit:number=10) => {
+    const data = await pagination(
+        page,
+        limit,
+        async ({ skip, take }: { skip: number, take: number }) => await prisma.product.findMany({
+            skip:skip,
+            take:take,
+            omit: {
+                createdAt: true,
+                updatedAt: true
+            }
+        }),
+        await prisma.product.count()
+    )
+    return ok(data);
 }
 
 export const getProductByIdService = async (id: string) => {
@@ -47,7 +55,7 @@ export const createProductService = async (product: IProduct) => {
 }
 
 export const deleteProductService = async (id: string) => {
-    const data = await prisma.product.delete({
+    await prisma.product.delete({
         where: {
             id: id
         }

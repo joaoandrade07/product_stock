@@ -3,7 +3,9 @@ import { IProduct } from "../interfaces/Product"
 import { createProductService, getAllProductsService } from "../services/productService";
 
 export const getAllProductsController =async (req:Request, res:Response) => {
-    const products = await getAllProductsService();
+    const page = Number(req.query.page);
+    const limit = Number(req.query.limit);
+    const products = await getAllProductsService(page, limit);
     res.status(products.statusCode).json(products.body);
 }
 
