@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import { IClient } from "../interfaces/Clients";
-import { createClientService, getAllClientsService, getClientByIdService } from "../services/clientService";
+import { createClientService, getAllClientsService, getClientByDocumentOrEmailOrIdService } from "../services/clientService";
 
 export const getAllClientsController = async(req:Request, res:Response) => {
     const data = await getAllClientsService();
     res.status(data.statusCode).json(data.body);
 }
 
-export const getClientById = async(req:Request, res:Response) => {
-    const id: string = req.params.id;
-    const data = await getClientByIdService(id);
+export const getClientByDocumentOrEmailOrIdController = async(req:Request, res:Response) => {
+    const document: string = req.params.document;
+    const data = await getClientByDocumentOrEmailOrIdService(document);
     res.status(data.statusCode).json(data.body);
 }
 

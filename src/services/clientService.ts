@@ -14,20 +14,46 @@ export const getAllClientsService = async () => {
     return ok(users);
 }
 
-export const getClientByIdService = async (id: string) => {
-    const user = await prisma.client.findUnique({
+export const getClientByDocumentOrEmailOrIdService = async (document: string) => {
+    const client = await prisma.client.findMany({
         where: {
-            id: id
+            OR:[
+                {
+                    document:{
+                        equals:document
+                    }
+                },
+                {
+                    email:{
+                        equals:document
+                    }
+                },
+                {
+                    id:{
+                        equals:document
+                    }
+                },
+            ]
         },
         omit: {
-            id: true,
             createdAt: true,
             updatedAt: true,
         },
-        include: { address: true }
+        include: { 
+            address: {
+                select: {
+                    id:true,
+                    street:true,
+                    number:true,
+                    city:true,
+                    state:true,
+                    zip:true
+                }
+            } 
+        }
     });
-    if (!user) return notFound();
-    return ok(user);
+    if (!client) return notFound();
+    return ok(client);
 }
 
 export const createClientService = async (client: IClient) => {

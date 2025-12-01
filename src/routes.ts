@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { createUserController, deleteUserController, getAllUsersController, getUserByIdController } from "./controllers/userController";
-import { createClientController, getAllClientsController, getClientById } from "./controllers/clientController";
+import { createClientController, getAllClientsController, getClientByDocumentOrEmailOrIdController } from "./controllers/clientController";
 import { loginController } from "./controllers/loginController";
 import { authenticateToken } from "./middlewares/auth/authenticateToken";
 import { authorizeRole } from "./middlewares/auth/authorizeRole";
@@ -29,7 +29,7 @@ router.delete("/deleteUser/:id", authenticateToken, authorizeRoleOrSelf([Role.AD
 //Clients routes
 router.post("/createClient", authenticateToken, createClientController);
 router.get("/getClients", authenticateToken, getAllClientsController);
-router.get("/getClients/:id", authenticateToken, getClientById);
+router.get("/getClients/:document", authenticateToken, getClientByDocumentOrEmailOrIdController);
 
 //Products routes
 router.post("/createProduct", authenticateToken, createProductController);
